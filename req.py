@@ -5,7 +5,7 @@ from keys import *
 
 
 def req():
-    with open('coord.json') as json_file:
+    with open('coord.json', encoding='utf-8') as json_file:
         data = json.load(json_file)
         for item in data['coord']:
             lat = item['lat']
@@ -15,7 +15,7 @@ def req():
                              "units": "metric", "cnt": f"{9}", "lang": 'ru'}
     current_weather_params = {"lat": f"{lat}", "lon": f"{lon}", "appid": API_KEY_OW,
                               "units": "metric", "lang": 'ru'}
-    with open("coord.json", "w") as f:
+    with open("coord.json", "w", encoding='utf-8') as f:
         pass
 
     response = requests.get(
@@ -62,5 +62,5 @@ def req():
         arr['d2']['humidity'] = response.json()['list'][8]['main']['humidity']
         arr['d2']['wind'] = response.json()['list'][8]['wind']['speed']
 
-        with open('resp_to_print.json', 'w') as file:
+        with open('resp_to_print.json', 'w', encoding="utf-8") as file:
             json.dump(arr, file, indent=4, ensure_ascii=False)
