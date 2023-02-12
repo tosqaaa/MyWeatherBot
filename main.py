@@ -14,6 +14,32 @@ from keyboards import *
 
 bot = telebot.TeleBot(TELEGRAM_BOT_API, parse_mode="html")
 
+@bot.message_handler(commands=['help'])
+def help_message(message):
+    bot.send_message(message.chat.id, text=HELP_MESSAGE)
+    
+    
+@bot.message_handler(commands=['language', 'lang', 'l'])
+def change_language(message):
+    bot.send_message(message.chat.id, text=CHANGE_LANGUAGE,
+                     reply_markup=KEYBOARD_LANGUGE)
+    
+@bot.message_handler(commands=['start'])
+def start_message(message):
+    bot.send_message(message.chat.id, text=START_MESSAGE_RU.format(
+        message.from_user.first_name), reply_markup=KEYBOARD_GET_WEATHER_RU)
+    
+@bot.message_handler(content_types=['text'])
+def choose_language(message):
+    if message.text == 'Русский язык':
+        bot.send_message(message.chat.id, text=CHOSEN_RU,
+                         reply_markup=KEYBOARD_GET_WEATHER_RU)
+        bot.delete_message(message.chat.id, message.message_id)
+
+    elif message.text == "Беларуская мова":
+        bot.send_message(message.chat.id, text=CHOSEN_BY,
+                         reply_markup=KEYBOARD_GET_WEATHER_BY)
+        bot.delete_message(message.chat.id, message.message_id)
 
 @bot.message_handler(content_types=['location'])
 def location(message):
@@ -69,34 +95,16 @@ def location(message):
         bot.send_message(message.chat.id, text=ERROR_MESSAGE_RU)
 
 
-@bot.message_handler(commands=['help'])
-def help_message(message):
-    bot.send_message(message.chat.id, text=HELP_MESSAGE)
 
 
-@bot.message_handler(commands=['language', 'lang', 'l'])
-def change_language(message):
-    bot.send_message(message.chat.id, text=CHANGE_LANGUAGE,
-                     reply_markup=KEYBOARD_LANGUGE)
 
 
-@bot.message_handler(content_types=['text'])
-def choose_language(message):
-    if message.text == 'Русский язык':
-        bot.send_message(message.chat.id, text=CHOSEN_RU,
-                         reply_markup=KEYBOARD_GET_WEATHER_RU)
-        bot.delete_message(message.chat.id, message.message_id)
-
-    elif message.text == "Беларуская мова":
-        bot.send_message(message.chat.id, text=CHOSEN_BY,
-                         reply_markup=KEYBOARD_GET_WEATHER_BY)
-        bot.delete_message(message.chat.id, message.message_id)
 
 
-@bot.message_handler(commands=['start'])
-def start_message(message):
-    bot.send_message(message.chat.id, text=START_MESSAGE_RU.format(
-        message.from_user.first_name), reply_markup=KEYBOARD_GET_WEATHER_RU)
+
+
+
+
 
 
 def main():
@@ -111,4 +119,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    print(dir(main()))
