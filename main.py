@@ -14,36 +14,57 @@ from keyboards import *
 
 bot = telebot.TeleBot(TELEGRAM_BOT_API, parse_mode="html")
 
+
 @bot.message_handler(commands=['help'])
 def help_message(message):
     bot.send_message(message.chat.id, text=HELP_MESSAGE)
-    
-    
+
+
 @bot.message_handler(commands=['language', 'lang', 'l'])
 def change_language(message):
     bot.send_message(message.chat.id, text=CHANGE_LANGUAGE,
                      reply_markup=KEYBOARD_LANGUGE)
-    
+
+
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.chat.id, text=START_MESSAGE_RU.format(
         message.from_user.first_name), reply_markup=KEYBOARD_GET_WEATHER_RU)
-    
+
+
 @bot.message_handler(content_types=['text'])
 def choose_language(message):
     if message.text == 'Русский язык':
         bot.send_message(message.chat.id, text=CHOSEN_RU,
                          reply_markup=KEYBOARD_GET_WEATHER_RU)
         bot.delete_message(message.chat.id, message.message_id)
+        
+        with open("lang.json", "w", encoding="utf-8") as file:
+            json.dump("ru", file)
 
     elif message.text == "Беларуская мова":
         bot.send_message(message.chat.id, text=CHOSEN_BY,
                          reply_markup=KEYBOARD_GET_WEATHER_BY)
         bot.delete_message(message.chat.id, message.message_id)
+        
+        with open("lang.json", "w", encoding="utf-8") as file:
+            json.dump("by", file)
 
-@bot.message_handler(content_types=['location'])
+
+@bot.message_handler(content_types=['location', 'text'])
 def location(message):
-
+    
+    
+    with open("lang.json", "r") as file:
+        language = json.load(file)
+        
+    if language == "by":
+        text = DATA_MESSAGE_BY
+    else:
+        text = DATA_MESSAGE_RU
+    
+   
+    
     create_db()
 
     insert_db(user_id=message.from_user.id,
@@ -72,7 +93,7 @@ def location(message):
         bot.send_message(message.chat.id, text=LOADING_MESSAGE_RU)
 
         bot.send_message(message.chat.id,
-                         text=DATA_MESSAGE_RU.format(
+                         text.format(
                              data['main']['country'],
                              data['main']['city'],
                              datetime.datetime.fromtimestamp(
@@ -95,22 +116,10 @@ def location(message):
         bot.send_message(message.chat.id, text=ERROR_MESSAGE_RU)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 def main():
     try:
         print("Running...")
-        
+
         # keep_alive()
         bot.polling(none_stop=True)
     except:
