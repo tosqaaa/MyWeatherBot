@@ -16,3 +16,4 @@ This telegram bot running on <https://replit.com/> with monitoring service <http
 ## Supported languages
 -Russian
 -Belarusian
+
