@@ -115,7 +115,7 @@ def location(message):
             bot.send_message(message.chat.id,
                              DATA_MESSAGE_RU.format(
                                  data['main']['country'],
-                                 trans_to_be(data['main']['city']),
+                                 data['main']['city'],
                                  datetime.datetime.fromtimestamp(
                                      int(message.date + 10800)).strftime('%d-%m %H:%M'),
                                  str(data['main']['rise'])[10:],
