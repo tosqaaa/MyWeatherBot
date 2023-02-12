@@ -12,3 +12,7 @@ It is possible to change the language
 ## Hosting
 
 This telegram bot running on <https://replit.com/> with monitoring service <https://uptimerobot.com/> It's free and very usefull for simple python projects
+
+## Supported languages
+-Russian
+-Belarusian
