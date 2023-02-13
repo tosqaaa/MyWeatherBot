@@ -30,7 +30,7 @@ def change_language(message):
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.chat.id, text=START_MESSAGE_RU.format(
-        message.from_user.first_name), reply_markup=KEYBOARD_GET_WEATHER_RU)
+        message.from_user.first_name), reply_markup=KEYBOARD_LANGUGE)
 
 
 @bot.message_handler(content_types=['text'])
@@ -108,7 +108,7 @@ def location(message):
                                      str(data['d2']['weather']).capitalize()),
                                  round(data['d2']['temp'], 1),
                                  data['d2']['humidity'],
-                                 round(data['d2']['wind'], 1)))
+                                 round(data['d2']['wind'], 1)), reply_markup=KEYBOARD_LANGUGE)
         else:
             bot.send_message(message.chat.id, text=LOADING_MESSAGE_RU)
 
@@ -131,7 +131,7 @@ def location(message):
                                  str(data['d2']['weather']).capitalize(),
                                  round(data['d2']['temp'], 1),
                                  data['d2']['humidity'],
-                                 round(data['d2']['wind'], 1)))
+                                 round(data['d2']['wind'], 1)), reply_markup=KEYBOARD_LANGUGE)
     else:
         bot.send_message(message.chat.id, text=ERROR_MESSAGE_RU)
         
