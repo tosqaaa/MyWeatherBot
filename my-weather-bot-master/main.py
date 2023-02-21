@@ -2,13 +2,11 @@
 # import pip
 # from background import keep_alive
 # pip.main(['install','pytelegrambotapi'])
-import logging
 from aiogram.bot import Bot
 from aiogram.dispatcher import Dispatcher
 from aiogram import types
 from aiogram.utils import executor
-import datetime, json
-import time
+import json
 from req import req
 from db import *
 from keys import *
@@ -20,9 +18,19 @@ bot = Bot(token=TELEGRAM_BOT_API, parse_mode="html")
 dp = Dispatcher(bot)
 
 
+
+@dp.message_handler(commands = ['users'])
+async def all_users(message: types.Message):
+    if message.from_user.id == 696966668:
+        for item in get_all_users():
+            await bot.send_message(message.chat.id, text = item)
+    else:
+        await bot.send_message(message.chat.id, text = f"{message.from_user.first_name}, you don't have rights for this command")
+    
+
 @dp.message_handler(commands=['start'])
 async def start_message(message: types.Message):
-    await bot.send_message(message.chat.id, text=START_MESSAGE_RU.format(message.from_user.first_name), reply_markup=KEYBOARD_LANGUGE)
+    await bot.send_message(message.chat.id, text=START_MESSAGE.format(message.from_user.first_name), reply_markup=KEYBOARD_LANGUGE)
     
     create_db()
 
@@ -115,7 +123,7 @@ async def location(message):
                                      str(data['d2']['weather']).capitalize()),
                                  round(data['d2']['temp'], 1),
                                  data['d2']['humidity'],
-                                 round(data['d2']['wind'], 1)), reply_markup=KEYBOARD_LANGUGE)
+                                 round(data['d2']['wind'], 1)))
         else:
             await bot.send_message(message.chat.id, text=LOADING_MESSAGE_RU)
 
@@ -137,19 +145,10 @@ async def location(message):
                                  str(data['d2']['weather']).capitalize(),
                                  round(data['d2']['temp'], 1),
                                  data['d2']['humidity'],
-                                 round(data['d2']['wind'], 1)), reply_markup=KEYBOARD_LANGUGE)
+                                 round(data['d2']['wind'], 1)))
     else:
         await bot.send_message(message.chat.id, text=ERROR_MESSAGE_RU)
         
-    with open('lang.json', 'w') as file:
-        pass
-
-
-
-    
-
-    
-
 
 def main():
     try:

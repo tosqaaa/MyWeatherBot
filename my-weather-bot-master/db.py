@@ -62,3 +62,20 @@ def get_language_from_user(user_id: int):
     finally:
         cursor.close()
         conn.close()
+        
+        
+def get_all_users():
+    try:
+        conn = sqlite3.connect('users.db', check_same_thread=False)
+        cursor = conn.cursor()
+        
+        cursor.execute("""SELECT * FROM users""")
+        
+        selected_users = cursor.fetchall()
+       
+        return selected_users
+    except sqlite3.Error as er:
+        print(er)
+    finally:
+        cursor.close()
+        conn.close()
